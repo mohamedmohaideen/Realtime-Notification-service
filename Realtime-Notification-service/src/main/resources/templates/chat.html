@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Real-Time Chat Application</h1>
+    <div id="chat"
+         class="border rounded p-3 mb-3"
+         style="height: 400px; overflow-y: scroll; background-color: #f8f9fa;">
+        <!-- Chat messages will appear here -->
+</div>
+    <div class="input-group">
+        <input type="text" id="messageInput" class="form-control" placeholder="Type your message here...">
+       <div id="input-group-append" class="input-group-append">
+        <button id="sendButton" class="btn btn-primary">Send</button>
+       </div>
+    </div>
+</div>
+</body>
+<script>
+    let stompClient = null;
+    let userName = null;
+
+    // Enable or disable input box and button
+    function setConnected(connected) {
+        document.getElementById('messageInput').disabled = !connected;
+        document.getElementById('sendButton').disabled = !connected;
+    }
+
+    // Show message in chat box
+    function showMessage(sender, content, isSelf) {
+        const chatBox = document.getElementById('chat');
+        const messageElement = document.createElement('div');
+
+        // Different style for your own messages
+        messageElement.className = isSelf ? "text-end p-2" : "text-start p-2";
+        messageElement.innerHTML = `<strong>${sender}:</strong> ${content}`;
+
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Connect to websocket
+    function connect() {
+        const socket = new SockJS('/WS_Notification');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('✅ Connected: ' + frame);
+            stompClient.subscribe('/topic/notifications', function (messageOutput) {
+                const msg = JSON.parse(messageOutput.body);
+                const isSelf = msg.sender === userName;
+                showMessage(msg.sender, msg.content, isSelf);
+            });
+        }, function (error) {
+            console.error('❌ WebSocket connection error:', error);
+        });
+    }
+
+    // Send message
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const messageText = input.value.trim();
+        if (messageText && userName) {
+            const messageObj = {
+                sender: userName,
+                content: messageText
+            };
+            stompClient.send("/app/sendMessage", {}, JSON.stringify(messageObj));
+            input.value = '';
+        }
+    }
+
+    // Ask user name
+    function askUserName() {
+        userName = prompt("Please enter your name:");
+        if (!userName || userName.trim() === "") {
+            userName = "Anonymous";
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function () {
+        askUserName();
+        connect();
+
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    });
+</script>
+</html>
