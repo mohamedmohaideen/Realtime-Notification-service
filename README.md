@@ -56,11 +56,17 @@ One Message → One Notification (@OneToOne)
 **H2 Database Console:** In-memory database for testing and demo purposes (http://localhost:8080/h2-console).
 
 ## **API Endpoints**
+
 **Method	Endpoint	Description**
+
 **POST**	/api/auth/register	Register a new user
+
 **POST**	/api/auth/login	Authenticate user and generate JWT token
+
 **GET**	/api/messages	Retrieve all messages (Authenticated users only)
+
 **POST**	/api/messages/send	Send a message to another user
+
 **GET**	/ws	Establish WebSocket connection for live updates
 
 ## **Tools and Technologies Used**
