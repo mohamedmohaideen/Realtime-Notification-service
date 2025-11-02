@@ -1,9 +1,10 @@
 # **Spring Boot Realtime Notification Service**
 
-##**Overview**
+## **Overview**
+
 The **Spring Boot Realtime Notification Service** is a full-stack backend system designed to send and receive real-time notifications between users. It utilizes Spring Boot, Spring Security, JWT Authentication, and WebSocket technologies to provide secure, instant communication between clients. The project uses an H2 in-memory database for lightweight data storage and quick setup, making it ideal for learning and demonstration purposes.
 
-##**Project Structure**
+## **Project Structure**
 **Controller:**
 Handles incoming HTTP and WebSocket requests, manages message broadcasting, and exposes REST endpoints for authentication and messaging.
 
@@ -22,7 +23,7 @@ Implements Spring Security with JWT for authentication and authorization. Config
 **Application:**
 The main entry point of the Spring Boot application.
 
-##**Database Setup**
+## **Database Setup**
 
 **Database:** H2 (in-memory database)
 
@@ -34,13 +35,13 @@ The main entry point of the Spring Boot application.
 
 **Notification:** Stores notification details for real-time updates.
 
-##**Entity Relationships:**
+## **Entity Relationships:**
 
 One User → Many Messages (@OneToMany)
 
 One Message → One Notification (@OneToOne)
 
-##**Features**
+## **Features**
 
 **JWT Authentication:** Secure login system using JSON Web Tokens.
 
@@ -54,7 +55,7 @@ One Message → One Notification (@OneToOne)
 
 **H2 Database Console:** In-memory database for testing and demo purposes (http://localhost:8080/h2-console).
 
-##**API Endpoints**
+## **API Endpoints**
 **Method	Endpoint	Description**
 **POST**	/api/auth/register	Register a new user
 **POST**	/api/auth/login	Authenticate user and generate JWT token
@@ -62,7 +63,7 @@ One Message → One Notification (@OneToOne)
 **POST**	/api/messages/send	Send a message to another user
 **GET**	/ws	Establish WebSocket connection for live updates
 
-##**Tools and Technologies Used**
+## **Tools and Technologies Used**
 
 **Java 17** – Core programming language.
 
@@ -84,7 +85,7 @@ One Message → One Notification (@OneToOne)
 
 **IntelliJ IDEA** – IDE used for coding, running, and debugging the application.
 
-##**Spring Initializr Dependencies**
+## **Spring Initializr Dependencies**
 
 1) Spring Web
 
@@ -100,7 +101,7 @@ One Message → One Notification (@OneToOne)
 
 7) Lombok
 
-##**Conclusion**
+## **Conclusion**
 
 This project showcases a complete, secure, and scalable real-time backend service with JWT authentication and live notifications using WebSocket. It’s an excellent foundation for building real-world applications like chat systems, live dashboards, or collaborative tools.
 
